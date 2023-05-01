@@ -12,7 +12,20 @@ const db = mysql.createConnection({
 
 // refactor to display in table format rather than json
 const viewEmployees = function () {
-    db.query("SELECT * FROM employee", function (err, results) {
+    const query = `SELECT
+    e.id AS id,
+    CONCAT(e.last_name, ', ', e.first_name) AS name,
+    role.title AS title,
+    department.name AS department,
+    role.salary AS salary,
+    CONCAT(m.last_name, ', ', m.first_name) AS manager
+FROM department
+JOIN role ON department.id = role.department_id
+JOIN employee e ON role.id = e.role_id
+LEFT OUTER JOIN employee m ON e.manager_id = m.id
+ORDER BY e.id;`;
+
+    db.query(query, function (err, results) {
         if (err) {
             console.log(err);
         }
