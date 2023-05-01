@@ -1,5 +1,5 @@
 const mysql = require("mysql2");
-const { createTable } = require("./createTable");
+const { createTable } = require("./utility");
 
 require("dotenv").config();
 

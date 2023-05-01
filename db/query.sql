@@ -23,13 +23,17 @@
 -- LEFT OUTER JOIN employee m ON e.manager_id = m.id
 -- ORDER BY e.id;
 
-SELECT
-    role.id AS id,
-    role.title AS title,
-    role.salary AS salary,
-    department.name AS department
-FROM role
-JOIN department ON role.department_id = department.id
-ORDER BY role.id;
+-- SELECT
+--     role.id AS id,
+--     role.title AS title,
+--     role.salary AS salary,
+--     department.name AS department
+-- FROM role
+-- JOIN department ON role.department_id = department.id
+-- ORDER BY role.id;
 
-SELECT department.id AS id, department.name AS department FROM department;
+-- SELECT department.id AS id, department.name AS department FROM department;
+
+SELECT last_name
+FROM employee
+WHERE manager_id IS NULL;
