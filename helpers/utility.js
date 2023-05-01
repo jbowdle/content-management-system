@@ -75,4 +75,17 @@ const createDepartmentArray = async function() {
     return roleArray;
 }
 
-module.exports = { createTable, createRoleArray, createManagerArray, createDepartmentArray };
+const createEmployeeArray = async function() {
+    const results = await getResults("SELECT id FROM employee;");
+    const newResults = results[0];
+
+    let roleArray = [];
+
+    for (let i = 0; i < newResults.length; i++) {
+        roleArray.push(`${Object.values(newResults[i])}`);
+    }
+
+    return roleArray;
+}
+
+module.exports = { createTable, createRoleArray, createManagerArray, createDepartmentArray, createEmployeeArray };

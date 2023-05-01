@@ -1,12 +1,14 @@
 const inquirer = require("inquirer");
 const { viewEmployees, viewRoles, viewDepartments } = require("./helpers/view");
-const { createRoleArray, createManagerArray, createDepartmentArray } = require("./helpers/utility");
+const { createRoleArray, createManagerArray, createDepartmentArray, createEmployeeArray } = require("./helpers/utility");
 const { addEmployee, addRole, addDepartment } = require("./helpers/add");
+const { updateEmployeeRole } = require("./helpers/update");
 
 const runMenu = async function() {
     let rolesArray = await createRoleArray();
     let managerArray = await createManagerArray();
     let departmentArray = await createDepartmentArray();
+    let employeeArray = await createEmployeeArray();
 
     inquirer
         .prompt([
@@ -116,6 +118,28 @@ const runMenu = async function() {
                     }
                 }
             },
+            {
+                type: "list",
+                name: "updateEmployee",
+                message: "Which employee will be updated?",
+                choices: employeeArray,
+                when: (answers) => {
+                    if (answers.menu === "Update employee role") {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "list",
+                name: "updateRole",
+                message: "What will the new role be?",
+                choices: rolesArray,
+                when: (answers) => {
+                    if (answers.menu === "Update employee role") {
+                        return true;
+                    }
+                }
+            },
         ])
         .then((response) => {
             switch (response.menu) {
@@ -138,8 +162,7 @@ const runMenu = async function() {
                     runMenu();
                     break;
                 case "Update employee role":
-                    // placeholder
-                    console.log(`You chose: ${response.menu}. This option has not been implemented yet.`);
+                    updateEmployeeRole(response.updateEmployee, response.updateRole);
                     runMenu();
                     break;
                 case "Update employee manager":
