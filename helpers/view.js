@@ -34,4 +34,35 @@ ORDER BY e.id;`;
     });
 }
 
-module.exports = { viewEmployees };
+const viewRoles = function () {
+    const query = `SELECT
+    role.id AS id,
+    role.title AS title,
+    role.salary AS salary,
+    department.name AS department
+FROM role
+JOIN department ON role.department_id = department.id
+ORDER BY role.id;`;
+
+    db.query(query, function (err, results) {
+        if (err) {
+            console.log(err);
+        }
+
+        createTable(results);
+    });
+}
+
+const viewDepartments = function () {
+    const query = `SELECT department.id AS id, department.name AS department FROM department;`;
+
+    db.query(query, function (err, results) {
+        if (err) {
+            console.log(err);
+        }
+
+        createTable(results);
+    });
+}
+
+module.exports = { viewEmployees, viewRoles, viewDepartments };

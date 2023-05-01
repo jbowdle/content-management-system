@@ -19,6 +19,7 @@ const createTable = function(data) {
     console.log("\n");
     // prints out the table to cli
     console.log(table.toString());
+    console.log("\n \n \n \n \n \n \n \n \n")
 }
 
 module.exports = { createTable };
