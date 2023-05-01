@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const { createTable } = require("./createTable");
 
 require("dotenv").config();
 
@@ -15,7 +16,8 @@ const viewEmployees = function () {
         if (err) {
             console.log(err);
         }
-        console.log(results);
+
+        createTable(results);
     });
 }
 
