@@ -1,5 +1,4 @@
 const mysql = require("mysql2");
-
 require("dotenv").config();
 
 const db = mysql.createConnection({
@@ -9,6 +8,7 @@ const db = mysql.createConnection({
     database: "employee_db"
 });
 
+// These functions all insert new rows into tables
 const addEmployee = function(firstName, lastName, roleID, managerID) {
     db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${roleID}, ${managerID})`);
 

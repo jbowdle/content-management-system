@@ -1,14 +1,15 @@
 const inquirer = require("inquirer");
 const { viewEmployees, viewRoles, viewDepartments } = require("./helpers/view");
-const { createRoleArray, createManagerArray, createDepartmentArray, createEmployeeArray } = require("./helpers/utility");
+const { createArray, getID } = require("./helpers/utility");
 const { addEmployee, addRole, addDepartment } = require("./helpers/add");
 const { updateEmployeeRole } = require("./helpers/update");
 
 const runMenu = async function() {
-    let rolesArray = await createRoleArray();
-    let managerArray = await createManagerArray();
-    let departmentArray = await createDepartmentArray();
-    let employeeArray = await createEmployeeArray();
+    // These arrays are used for question choices
+    let rolesArray = await createArray("SELECT id FROM role;");
+    let managerArray = await createArray("SELECT id FROM employee WHERE manager_id IS NULL;");
+    let departmentArray = await createArray("SELECT id FROM department;");
+    let employeeArray = await createArray("SELECT id FROM employee;");
 
     inquirer
         .prompt([
@@ -35,6 +36,7 @@ const runMenu = async function() {
                     "Quit"
                 ]
             },
+            // Next four questions trigger when user chooses "add employee"
             {
                 type: "input",
                 name: "employeeFirst",
@@ -77,6 +79,7 @@ const runMenu = async function() {
                     }
                 }
             },
+            // Next three questions trigger when user chooses "add role"
             {
                 type: "input",
                 name: "roleTitle",
@@ -108,6 +111,7 @@ const runMenu = async function() {
                     }
                 }
             },
+            // This question triggers when user chooses "add department"
             {
                 type: "input",
                 name: "departmentName",
@@ -118,6 +122,7 @@ const runMenu = async function() {
                     }
                 }
             },
+            // Next two questions trigger when user chooses "update employee role"
             {
                 type: "list",
                 name: "updateEmployee",
@@ -142,6 +147,8 @@ const runMenu = async function() {
             },
         ])
         .then((response) => {
+            // This giant switch statement will trigger helper functions depending on
+            // the user's choice. The helper functions execute mysql2 queries.
             switch (response.menu) {
                 case "View all employees":
                     viewEmployees();

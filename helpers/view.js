@@ -10,7 +10,7 @@ const db = mysql.createConnection({
     database: "employee_db"
 });
 
-// refactor to display in table format rather than json
+// The following functions make mysql2 queries and create a table from the result. 
 const viewEmployees = function () {
     const query = `SELECT
     e.id AS id,

@@ -22,10 +22,11 @@ const createTable = function(data) {
     console.log("\n");
     // prints out the table to cli
     console.log(table.toString());
-    console.log("\n \n \n \n \n \n \n \n \n")
+    console.log("\n")
 }
 
-const getResults = async function(query) {
+// This is used to generate arrays to give the user options to pick from
+const createArray = async function(query) {
     const db = await mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -33,59 +34,38 @@ const getResults = async function(query) {
         database: "employee_db"
     });
 
-    return db.query(query);
-}
-
-const createRoleArray = async function() {
-    const results = await getResults("SELECT id FROM role;");
+    const results = await db.query(query);
     const newResults = results[0];
+    // debug
+    console.log(newResults);
 
-    let roleArray = [];
+    let array = [];
 
     for (let i = 0; i < newResults.length; i++) {
-        roleArray.push(`${Object.values(newResults[i])}`);
+        array.push(`${Object.values(newResults[i])}`);
     }
 
-    return roleArray;
+    return array;
 }
 
-const createManagerArray = async function() {
-    const results = await getResults("SELECT id FROM employee WHERE manager_id IS NULL;");
-    const newResults = results[0];
+const getID = async function(tableName, columnName, entry) {
+    const db = await mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: process.env.PASSWORD,
+        database: "employee_db"
+    });
 
-    let roleArray = [];
-
-    for (let i = 0; i < newResults.length; i++) {
-        roleArray.push(`${Object.values(newResults[i])}`);
-    }
-
-    return roleArray;
+    const result = await db.query(`SELECT id FROM ${tableName} WHERE ${columnName} = "${entry}"`);
+    const rowID = Number(Object.values(result[0][0]));
+    return rowID;
 }
 
-const createDepartmentArray = async function() {
-    const results = await getResults("SELECT id FROM department;");
-    const newResults = results[0];
-
-    let roleArray = [];
-
-    for (let i = 0; i < newResults.length; i++) {
-        roleArray.push(`${Object.values(newResults[i])}`);
-    }
-
-    return roleArray;
+// debug
+const tester = function() {
+    let newID = getID("role", "title", "dep one manager");
+    console.log(newID);
 }
+tester();
 
-const createEmployeeArray = async function() {
-    const results = await getResults("SELECT id FROM employee;");
-    const newResults = results[0];
-
-    let roleArray = [];
-
-    for (let i = 0; i < newResults.length; i++) {
-        roleArray.push(`${Object.values(newResults[i])}`);
-    }
-
-    return roleArray;
-}
-
-module.exports = { createTable, createRoleArray, createManagerArray, createDepartmentArray, createEmployeeArray };
+module.exports = { createTable, createArray, getID };
