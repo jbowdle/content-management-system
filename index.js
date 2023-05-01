@@ -1,11 +1,12 @@
 const inquirer = require("inquirer");
 const { viewEmployees, viewRoles, viewDepartments } = require("./helpers/view");
-const { createRoleArray, createManagerArray } = require("./helpers/utility");
-const { addEmployee } = require("./helpers/add");
+const { createRoleArray, createManagerArray, createDepartmentArray } = require("./helpers/utility");
+const { addEmployee, addRole, addDepartment } = require("./helpers/add");
 
 const runMenu = async function() {
     let rolesArray = await createRoleArray();
     let managerArray = await createManagerArray();
+    let departmentArray = await createDepartmentArray();
 
     inquirer
         .prompt([
@@ -74,6 +75,47 @@ const runMenu = async function() {
                     }
                 }
             },
+            {
+                type: "input",
+                name: "roleTitle",
+                message: "What is the name of the role?",
+                when: (answers) => {
+                    if (answers.menu === "Add role") {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
+                name: "roleSalary",
+                message: "What is the role's salary?",
+                when: (answers) => {
+                    if (answers.menu === "Add role") {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "list",
+                name: "roleDepartment",
+                message: "What is the role's department?",
+                choices: departmentArray,
+                when: (answers) => {
+                    if (answers.menu === "Add role") {
+                        return true;
+                    }
+                }
+            },
+            {
+                type: "input",
+                name: "departmentName",
+                message: "What is the name of the department?",
+                when: (answers) => {
+                    if (answers.menu === "Add department") {
+                        return true;
+                    }
+                }
+            },
         ])
         .then((response) => {
             switch (response.menu) {
@@ -110,8 +152,7 @@ const runMenu = async function() {
                     runMenu();
                     break;
                 case "Add role":
-                    // placeholder
-                    console.log(`You chose: ${response.menu}. This option has not been implemented yet.`);
+                    addRole(response.roleTitle, response.roleSalary, response.roleDepartment)
                     runMenu();
                     break;
                 case "Remove role":
@@ -124,8 +165,7 @@ const runMenu = async function() {
                     runMenu();
                     break;
                 case "Add department":
-                    // placeholder
-                    console.log(`You chose: ${response.menu}. This option has not been implemented yet.`);
+                    addDepartment(response.departmentName);
                     runMenu();
                     break;
                 case "Remove department":

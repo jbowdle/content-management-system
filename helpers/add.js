@@ -10,10 +10,21 @@ const db = mysql.createConnection({
 });
 
 const addEmployee = function(firstName, lastName, roleID, managerID) {
-    const params = `${firstName}, ${lastName}, ${roleID}, ${managerID}`;
     db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${roleID}, ${managerID})`);
 
     console.log("Employee added.");
 }
 
-module.exports = { addEmployee };
+const addRole = function(title, salary, departmentID) {
+    db.query(`INSERT INTO role (title, salary, department_id) VALUES ("${title}", ${salary}, ${departmentID})`);
+
+    console.log("Role added.");
+}
+
+const addDepartment = function(departmentName) {
+    db.query(`INSERT INTO department (name) VALUES ("${departmentName}")`);
+
+    console.log("Department added.");
+}
+
+module.exports = { addEmployee, addRole, addDepartment };
