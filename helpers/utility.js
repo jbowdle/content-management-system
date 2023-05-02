@@ -36,8 +36,6 @@ const createArray = async function(query) {
 
     const results = await db.query(query);
     const newResults = results[0];
-    // debug
-    console.log(newResults);
 
     let array = [];
 
@@ -62,10 +60,10 @@ const getID = async function(tableName, columnName, entry) {
 }
 
 // debug
-const tester = function() {
-    let newID = getID("role", "title", "dep one manager");
-    console.log(newID);
-}
-tester();
+// const tester = function() {
+//     let newID = getID("department", "title", "dep one manager");
+//     console.log(newID);
+// }
+// tester();
 
 module.exports = { createTable, createArray, getID };

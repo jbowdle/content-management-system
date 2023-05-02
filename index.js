@@ -6,10 +6,9 @@ const { updateEmployeeRole } = require("./helpers/update");
 
 const runMenu = async function() {
     // These arrays are used for question choices
-    let rolesArray = await createArray("SELECT id FROM role;");
-    let managerArray = await createArray("SELECT id FROM employee WHERE manager_id IS NULL;");
-    let departmentArray = await createArray("SELECT id FROM department;");
-    let employeeArray = await createArray("SELECT id FROM employee;");
+    let rolesArray = await createArray("SELECT title FROM role;");
+    let departmentArray = await createArray("SELECT name FROM department;");
+    let employeeArray = await createArray("SELECT last_name FROM employee;");
 
     inquirer
         .prompt([
@@ -72,7 +71,7 @@ const runMenu = async function() {
                 type: "list",
                 name: "employeeManager",
                 message: "Who is the employee's manager?",
-                choices: managerArray,
+                choices: employeeArray,
                 when: (answers) => {
                     if (answers.menu === "Add employee") {
                         return true;
@@ -146,7 +145,7 @@ const runMenu = async function() {
                 }
             },
         ])
-        .then((response) => {
+        .then(async function(response) {
             // This giant switch statement will trigger helper functions depending on
             // the user's choice. The helper functions execute mysql2 queries.
             switch (response.menu) {
@@ -165,11 +164,15 @@ const runMenu = async function() {
                     runMenu();
                     break;
                 case "Add employee":
-                    addEmployee(response.employeeFirst, response.employeeLast, response.employeeRole, response.employeeManager);
+                    let roleID = await getID("role", "title", response.employeeRole);
+                    let managerID = await getID("employee", "last_name", response.employeeManager);
+                    addEmployee(response.employeeFirst, response.employeeLast, roleID, managerID);
                     runMenu();
                     break;
                 case "Update employee role":
-                    updateEmployeeRole(response.updateEmployee, response.updateRole);
+                    let employeeID =  await getID("employee", "last_name", response.updateEmployee);
+                    let newRoleID = await getID("role", "title", response.updateRole);
+                    updateEmployeeRole(employeeID, newRoleID);
                     runMenu();
                     break;
                 case "Update employee manager":
@@ -182,7 +185,8 @@ const runMenu = async function() {
                     runMenu();
                     break;
                 case "Add role":
-                    addRole(response.roleTitle, response.roleSalary, response.roleDepartment)
+                    let departmentID = await getID("department", "name", response.roleDepartment);
+                    addRole(response.roleTitle, response.roleSalary, departmentID);
                     runMenu();
                     break;
                 case "Remove role":
