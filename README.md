@@ -49,4 +49,4 @@ The following features are NON-functional and will be implemented at a later dat
 * View total utilized budget by department
 
 ## Walkthrough Video
-(Walkthrough Video)[./assets/walkthrough.webm]
+(Walkthrough Video)[https://drive.google.com/file/d/1c47tt9RXgUHpULx0LAFE8e87rC9XRZPQ/view]
